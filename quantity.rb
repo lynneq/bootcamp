@@ -1,8 +1,8 @@
 $LOAD_PATH << File.dirname(__FILE__)
 
-require 'unit'
-
-class Quantity
+require 'unit'  
+  
+class Quantity 
   
   attr_reader :amount
   attr_reader :unit
@@ -20,10 +20,18 @@ class Quantity
     @amount == other.amount 
   end
   
+end
+
+class ArithmeticQuantity < Quantity
+
   def + (other)
-    @amount += other.amount 
+    @amount += other.amount     
     raise "RuntimeErrorMSG" unless @unit.class == other.unit.class
     Quantity.new(@amount, Unit.base)   
-  end 
+  end
   
 end
+
+
+
+

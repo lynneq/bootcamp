@@ -4,7 +4,7 @@ require 'test/unit'
 require 'quantity'
 require 'unit'
 
-class QuantityTest < Test::Unit::TestCase 
+class QuantityTemperatureTest < Test::Unit::TestCase 
 
   def test_quantity_should_not_equal_to_one_another
     assert_not_equal Quantity.new(1, Temperature.c), Quantity.new(1, Temperature.f)
