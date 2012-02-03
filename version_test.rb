@@ -7,4 +7,4 @@ class Test_chance < Test::Unit::TestCase
     puts `ruby -v`
   end
   
-end
+endl

@@ -1,10 +1,18 @@
 $LOAD_PATH << File.dirname(__FILE__)
 class Unit
   
-  attr_reader:amount
+  attr_reader:base_amount
   
   def initialize(amount)
-    @amount = amount
+    @base_amount = amount
+  end
+  
+  def self.base
+    Unit.new(1)
+  end
+  
+  def calculate_total_amount(amount)
+    @base_amount * amount
   end
 
 end
@@ -16,7 +24,7 @@ class Volume < Unit
   end
   
   def self.oz
-    Volume.new(6)    
+    Volume.new(6)
   end
   
   def self.tbps
@@ -39,4 +47,32 @@ class Length < Unit
     Length.new(12)
   end
 
+  def self.yd
+    Length.new(36)
+  end
+
+end
+
+class Temperature < Unit
+  
+  def initialize(unit_type)
+    @unit_type = unit_type
+  end
+  
+  def self.c
+    Temperature.new(:c)
+  end
+  
+  def self.f
+    Temperature.new(:f)
+  end
+
+  def calculate_total_amount(amount)
+    if @unit_type == :c
+      amount.to_f 
+    else
+      (amount-32) * (0.5/0.9)  
+    end     
+  end
+  
 end
