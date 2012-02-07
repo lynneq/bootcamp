@@ -1,0 +1,4 @@
+class NoSpacesException < Exception
+end
+
+
