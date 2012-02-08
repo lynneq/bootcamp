@@ -16,7 +16,7 @@ class Attendant
         break
       end
     end
-  
+    
     if not found
       raise NoSpacesException
     end

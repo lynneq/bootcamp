@@ -9,11 +9,11 @@ class ParkingLot
   end
   
   def spaces
-    @spaces
+    @spaces.clone 
   end
   
   def parking_lot
-    @parking_lot
+    @parking_lot.clone#@parking_lot return reference
   end
   
   def validate_zero_space

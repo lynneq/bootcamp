@@ -21,7 +21,7 @@ class AttendantTest < Test::Unit::TestCase
     @parking_lot_empty = ParkingLot.new(3)
   end
   
-  def test_park_success_when_parking_lot_has_available_spaces
+  def test_park_success_when_at_least_one_parking_lot_has_spaces
     parking_lot_list = Array.new
     
     parking_lot_list.push(@parking_lot_full)
