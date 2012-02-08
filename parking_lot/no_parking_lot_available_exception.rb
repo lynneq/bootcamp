@@ -1,0 +1,2 @@
+class NoParkingLotAvailaleException < Exception
+end

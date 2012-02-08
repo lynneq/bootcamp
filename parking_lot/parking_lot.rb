@@ -1,13 +1,21 @@
+require "observer"
+
 require 'no_spaces_exception'
 require 'car_not_found_exception'
 
 class ParkingLot
-   
+  
+  include Observable
+  
   def initialize(capacity)
     @parking_lot = Array.new(capacity, :empty)
     @spaces = parking_lot.length
+    @length = parking_lot.length
   end
   
+  def length 
+    @length
+  end
   def spaces
     @spaces # Fixnum is immutable
   end
@@ -29,6 +37,10 @@ class ParkingLot
     
     @parking_lot[position]= user_id
     @spaces -=1
+    
+    changed
+    notify_observers(self)
+    
     user_id
   end
   
@@ -39,6 +51,10 @@ class ParkingLot
     else      
       @parking_lot[position] = :empty
       @spaces +=1
+      
+      changed
+      notify_observers(self)
+      
       user_id
     end
   end

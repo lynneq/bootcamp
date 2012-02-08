@@ -3,7 +3,9 @@ $LOAD_PATH << File.dirname(__FILE__)
 require 'test/unit'
 require 'parking_lot'
 require 'attendant'
+
 require 'no_spaces_exception'
+require 'no_parking_lot_available_exception'
 
 class AttendantTest < Test::Unit::TestCase
   
@@ -21,6 +23,18 @@ class AttendantTest < Test::Unit::TestCase
     @parking_lot_empty = ParkingLot.new(3)
   end
   
+  def test_park_raise_no_parking_lot_available_exception
+    parking_lot_list = Array.new
+    
+    parking_lot_list.push(@parking_lot_full)
+    
+    attendant = Attendant.new(parking_lot_list)
+      
+    assert_raise NoParkingLotAvailaleException do
+      attendant.park("user_4")
+    end
+  end
+  
   def test_park_success_when_at_least_one_parking_lot_has_spaces
     parking_lot_list = Array.new
     
@@ -29,23 +43,10 @@ class AttendantTest < Test::Unit::TestCase
     parking_lot_list.push(@parking_lot_empty)
     
     attendant = Attendant.new(parking_lot_list)
-    assert_equal "user_6", attendant.park("user_6")          
-    assert_equal ["user_4", "user_5", "user_6"],  @parking_lot_avaliable.parking_lot
+    assert_equal "user_6", attendant.park("user_6")      
 
-    assert_equal "user_7", attendant.park("user_7")
-    assert_equal ["user_7", :empty, :empty],  parking_lot_list[2].parking_lot    
-  end
-  
-  def test_park_raise_no_spaces_exception_when_no_parking_lot_available
-    parking_lot_list = Array.new
-    
-    parking_lot_list.push(@parking_lot_full)
-    
-    attendant = Attendant.new(parking_lot_list)
-      
-    assert_raise NoSpacesException do
-      attendant.park("user_4")
-    end
+    assert_equal ["user_4", "user_5", "user_6"], @parking_lot_avaliable.parking_lot  
+    assert_equal [:empty, :empty, :empty], @parking_lot_empty.parking_lot 
   end
   
   def test_retrieve_car
@@ -57,10 +58,10 @@ class AttendantTest < Test::Unit::TestCase
     
     attendant = Attendant.new(parking_lot_list)
     assert_equal "user_6", attendant.park("user_6")
-    assert_equal ["user_4", "user_5", "user_6"],  @parking_lot_avaliable.parking_lot
     
     assert_equal "user_6", attendant.retrieve("user_6")
-    assert_equal ["user_4", "user_5", :empty],  @parking_lot_avaliable.parking_lot
+    
+    assert_equal [:empty, :empty, :empty],  @parking_lot_empty.parking_lot
   end
   
   def test_retrieve_car_throw_car_not_found_exception

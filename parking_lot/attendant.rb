@@ -1,29 +1,43 @@
+require 'observer'
+
 require 'parking_lot'
-require 'no_spaces_exception'
+require 'no_parking_lot_available_exception'
+
+require 'bigdecimal'
 
 class Attendant
     
   def initialize(parking_lot_list)
     @parking_lot_list = parking_lot_list
-  end
-
-  def park(user_id)
-    found = false
+    @limit = 0.8
+    
+    @available_parking_lots = Array.new    
+    
     @parking_lot_list.each do |parking_lot|
-      if parking_lot.spaces != 0
-        parking_lot.park_by_user(user_id)
-        found = true
-        break
-      end
+      parking_lot.add_observer(self)
+      
+      available_percentage = BigDecimal(parking_lot.spaces.to_s)/BigDecimal(parking_lot.length.to_s)      
+      if available_percentage > BigDecimal("1") - BigDecimal(@limit.to_s)
+        @available_parking_lots.push(parking_lot)
+      end            
+    end
+  end
+  
+  def park(user_id)      
+    if @available_parking_lots.length == 0
+      raise NoParkingLotAvailaleException
     end
     
-    if not found
-      raise NoSpacesException
+    @available_parking_lots.each do |parking_lot|
+      begin
+        return parking_lot.park_by_user(user_id)
+      rescue NoSpacesException
+      end
     end
-    user_id   
+    raise NoParkingLotAvailaleException
   end
 
-  def retrieve(user_id)
+  def retrieve(user_id) 
     @parking_lot_list.each do |parking_lot|
       begin
         return parking_lot.remove_by_user(user_id) #use "return" to break the iteration, if throw exception, then go the rescue part.
@@ -32,5 +46,17 @@ class Attendant
     end
     raise CarNotFoundException # nothing happened in the iteration
   end
-
+  
+  def update_available_parking_lots(parking_lot)
+    if BigDecimal(parking_lot.spaces.to_s)/BigDecimal(parking_lot.length.to_s)> BigDecimal("1") - BigDecimal(@limit.to_s)
+      @available_parking_lots.push(parking_lot)
+    else
+        @available_parking_lots.delete(parking_lot)
+    end    
+  end
+  
+  def update(parking_lot)
+    update_available_parking_lots(parking_lot) 
+  end
+  
 end
