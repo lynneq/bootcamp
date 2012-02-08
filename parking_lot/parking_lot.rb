@@ -9,7 +9,7 @@ class ParkingLot
   end
   
   def spaces
-    @spaces.clone 
+    @spaces # Fixnum is immutable
   end
   
   def parking_lot

@@ -48,4 +48,33 @@ class AttendantTest < Test::Unit::TestCase
     end
   end
   
+  def test_retrieve_car
+    parking_lot_list = Array.new
+    
+    parking_lot_list.push(@parking_lot_full)
+    parking_lot_list.push(@parking_lot_avaliable)
+    parking_lot_list.push(@parking_lot_empty)
+    
+    attendant = Attendant.new(parking_lot_list)
+    assert_equal "user_6", attendant.park("user_6")
+    assert_equal ["user_4", "user_5", "user_6"],  @parking_lot_avaliable.parking_lot
+    
+    assert_equal "user_6", attendant.retrieve("user_6")
+    assert_equal ["user_4", "user_5", :empty],  @parking_lot_avaliable.parking_lot
+  end
+  
+  def test_retrieve_car_throw_car_not_found_exception
+    parking_lot_list = Array.new
+    
+    parking_lot_list.push(@parking_lot_full)
+    parking_lot_list.push(@parking_lot_avaliable)
+    parking_lot_list.push(@parking_lot_empty)
+    
+    attendant = Attendant.new(parking_lot_list)
+    
+    assert_raise CarNotFoundException do
+      attendant.retrieve("user_6")
+    end
+  end
+  
 end

@@ -23,4 +23,14 @@ class Attendant
     user_id   
   end
 
+  def retrieve(user_id)
+    @parking_lot_list.each do |parking_lot|
+      begin
+        return parking_lot.remove_by_user(user_id) #use "return" to break the iteration, if throw exception, then go the rescue part.
+      rescue CarNotFoundException   #do nothing for the exception            
+      end
+    end
+    raise CarNotFoundException # nothing happened in the iteration
+  end
+
 end
