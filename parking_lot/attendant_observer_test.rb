@@ -39,10 +39,6 @@ class AttendantObserverTest < Test::Unit::TestCase
    
      attendant = Attendant.new(parking_lot_list)
      
-     assert_raise NoParkingLotAvailaleException do
-       attendant.park("user_5")
-     end
-     
      attendant.retrieve("user_2")
      assert_equal "user_5", attendant.park("user_5")   
      

@@ -16,10 +16,7 @@ class Attendant
     @parking_lot_list.each do |parking_lot|
       parking_lot.add_observer(self)
       
-      available_percentage = BigDecimal(parking_lot.spaces.to_s)/BigDecimal(parking_lot.length.to_s)      
-      if available_percentage > BigDecimal("1") - BigDecimal(@limit.to_s)
-        @available_parking_lots.push(parking_lot)
-      end            
+      update_available_parking_lots(parking_lot)
     end
   end
   
@@ -27,14 +24,7 @@ class Attendant
     if @available_parking_lots.length == 0
       raise NoParkingLotAvailaleException
     end
-    
-    @available_parking_lots.each do |parking_lot|
-      begin
-        return parking_lot.park_by_user(user_id)
-      rescue NoSpacesException
-      end
-    end
-    raise NoParkingLotAvailaleException
+    @available_parking_lots[0].park_by_user(user_id) #already in the available list
   end
 
   def retrieve(user_id) 
