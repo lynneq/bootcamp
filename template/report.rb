@@ -1,23 +1,17 @@
 class Report
-  
   def initialize(printMessage)
     @message = printMessage
   end
   
-  def print(targetFormat)
-    if targetFormat == "html"
-      puts "<html>"
-      puts "<title>template page</title>"
-      puts "<body>"+@message+"</body>"
-      puts "</html>"
-    elsif targetFormat == "text"
-      puts @message
+  def print
+    begin  
+      raise 'Please use specific class to initialize!'
+    rescue Exception => e  
+      puts e.message  
+      puts e.backtrace.inspect  
     end
-  end
-  
+  end  
 end
 
-
-report = Report.new("Hello")
-report.print("html")
-report.print("text")
+r = Report.new("H")
+r.print
